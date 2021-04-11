@@ -1,0 +1,23 @@
+[
+   {
+    "ParameterKey": "JJtechVPCCIDR",
+    "ParameterValue": "17.0.0.0/16"
+   },
+   {
+    "ParameterKey": "JJtechsubnet1cidr",
+    "ParameterValue": "17.0.1.0/24"
+   },
+   {
+    "ParameterKey": "jjtechsubnet1AZ",
+    "ParameterValue": "us-east-2a"
+   },
+  {
+    "ParameterKey": "JJtechsubnet2publiccidir",
+    "ParameterValue": "17.0.2.0/24"
+  },
+  {
+    "ParameterKey": "Jjtechsubnet2publicAZ",
+    "ParameterValue" : "us-east-2b"
+  }
+
+]

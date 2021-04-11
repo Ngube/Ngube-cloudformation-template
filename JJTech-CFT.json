@@ -1,0 +1,117 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "",
+    "Metadata": {
+    },
+    "Parameters": {
+      "JJtechVPCCIDR": {
+          "Description": "Provide a cidir for your vpc",
+          "Type": "String",
+          "Default": "17.0.0.0/16"
+      },
+      "JJtechsubnet1cidr": {
+          "Description": "Provide a cidir for your subnet",
+          "Type": "String",
+          "Default": "17.0.1.0/24"
+      },
+      "jjtechsubnet1AZ": {
+          "Description": "pick an AZ for your subnet",
+          "Type": "String",
+          "Default": "us-east2-1a"
+      },
+      "JJtechsubnet2publiccidir": {
+          "Description": "provide a cidr for your subnet",
+          "Type": "String",
+          "Default": "17.0.2.0/24"
+      },
+      "Jjtechsubnet2publicAZ": {
+          "Description": "provide a cidir for your subnet",
+          "Type": "String",
+          "Default": "us-east2-1b"
+      }
+    },
+    "Mappings": {
+    },
+    "Conditions": {
+    },
+    "Resources": {
+      "JJtechVPC": {
+        "Type": "AWS::EC2::VPC",
+        "Properties": {
+          "CidrBlock": { "Ref": "JJtechVPCCIDR" },
+          "Tags": [{ "Key": "Name", "Value":  "JJtechVPC" }]
+        }
+      },
+      "JJtechigw": {
+        "Type": "AWS::EC2::InternetGateway",
+        "Properties": {
+          "Tags": [{ "Key": "Name", "Value":  "JJtechigw" }]
+        }
+      },
+      "AttachGateway": {
+        "Type": "AWS::EC2::VPCGatewayAttachment",
+        "Properties": {
+          "VpcId": { "Ref": "JJtechVPC" },
+          "InternetGatewayId": { "Ref": "JJtechigw" }
+        }
+      },
+      "jjtechsubnet1": {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": { "Ref": "jjtechsubnet1AZ" },
+          "VpcId": { "Ref": "JJtechVPC" },
+          "CidrBlock": { "Ref": "JJtechsubnet1cidr" },
+          "Tags": [{ "Key": "Name", "Value":  "jjtechsubnet1" }]
+        }
+      },
+      "JJtechsubnet2public": {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": { "Ref": "Jjtechsubnet2publicAZ" },
+          "VpcId": { "Ref": "JJtechVPC" },
+          "CidrBlock": { "Ref": "JJtechsubnet2publiccidir" },
+          "Tags": [{ "Key": "Name", "Value":  "JJtechsubnet2public" }]
+        }
+      },
+      "JJtechprivatesubnetRT": {
+        "Type": "AWS::EC2::RouteTable",
+        "Properties": {
+          "VpcId": { "Ref": "JJtechVPC" },
+          "Tags": [{ "Key": "Name", "Value":  "JJtechprivatesubnetRT" }]
+        }
+      },
+    "JJtechpublicsubnetRT": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": { "Ref": "JJtechVPC" },
+        "Tags": [{ "Key": "Name", "Value":  "JJtechpublicsubnetRT" }]
+      }
+    },
+    "jjtechprivatesubnetAS": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "jjtechsubnet1" },
+        "RouteTableId": { "Ref": "JJtechprivatesubnetRT" }
+      }
+    },
+    "JJtechpublicesubnetAS": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "JJtechsubnet2public" },
+        "RouteTableId": { "Ref": "JJtechpublicsubnetRT" }
+      }
+    },
+    "jjtechpublicesubnetR": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": { "Ref": "JJtechpublicsubnetRT" },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": { "Ref": "JJtechigw" }
+      }
+    }
+
+    },
+    "Outputs": {
+
+    }
+}
